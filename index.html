@@ -5,50 +5,133 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Valentine's Day 💖</title>
   <style>
-    body { text-align: center; display: flex; flex-direction: column; justify-content: center; align-items: center; height: 100vh; margin: 0; font-family: sans-serif; background-color: #ffe6e6; overflow: hidden; }
-    .container { background: white; padding: 30px; border-radius: 20px; box-shadow: 0 10px 20px rgba(0,0,0,0.1); }
-    h1 { color: #ff1a75; }
-    button { padding: 12px 25px; font-size: 18px; font-weight: bold; border-radius: 10px; border: none; cursor: pointer; margin: 10px; }
-    #yesBtn { background-color: #ff66b2; color: white; }
-    #no { background-color: #ff4d4d; color: white; position: relative; }
+    body {
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #ffe6e6;
+      overflow: hidden; /* Previne scroll-ul când fuge butonul */
+    }
+    .container {
+      background: white;
+      padding: 30px;
+      border-radius: 20px;
+      box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+    }
+    h1 {
+      color: #ff1a75;
+      margin-bottom: 30px;
+    }
+    .buttons {
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+      min-height: 50px;
+    }
+    button {
+      padding: 12px 25px;
+      font-size: 18px;
+      font-weight: bold;
+      border-radius: 10px;
+      border: none;
+      cursor: pointer;
+      transition: transform 0.2s;
+    }
+    #yesBtn {
+      background-color: #ff66b2;
+      color: white;
+    }
+    #yesBtn:hover {
+      background-color: #ff3399;
+      transform: scale(1.1);
+    }
+    #no {
+      background-color: #ff4d4d;
+      color: white;
+      position: relative; /* Schimbat din absolute pentru layout stabil */
+      z-index: 10;
+    }
+    #message {
+      display: none;
+      font-size: 24px;
+      color: #ff1a75;
+      margin-top: 20px;
+    }
   </style>
 </head>
 <body>
 
-<div class="container">
+<div class="container" id="mainCard">
   <h1 id="question">Would you be my Valentine? 💖</h1>
-  <div id="btns">
+  
+  <div class="buttons">
     <button id="yesBtn">YES</button>
     <button id="no">NO</button>
   </div>
-  <h2 id="msg" style="display:none; color: #ff1a75;">Yaaay! 🥰 Verifică e-mailul! 🌹</h2>
+
+  <div id="message">Yaaay! Te iubesc! 🥰🌹</div>
 </div>
 
-<form id="valentineForm" action="https://formspree.io/f/xbjnkyob" method="POST" style="display:none;">
-  <input type="text" name="raspuns" value="A ZIS DA! ❤️">
-</form>
-
 <script>
-  const noBtn = document.getElementById("no");
-  const yesBtn = document.getElementById("yesBtn");
-  const form = document.getElementById("valentineForm");
+const webhookURL = "https://eoazijdqi67w5vu.m.pipedream.net";
 
-  noBtn.addEventListener("mouseover", () => {
-    noBtn.style.position = "absolute";
-    const x = Math.random() * (window.innerWidth - noBtn.offsetWidth);
-    const y = Math.random() * (window.innerHeight - noBtn.offsetHeight);
-    noBtn.style.left = x + "px";
-    noBtn.style.top = y + "px";
-  });
+// Funcție pentru trimiterea datelor
+async function sendClick(choice) {
+  try {
+    await fetch(webhookURL, {
+      method: "POST",
+      mode: 'no-cors', // Adăugat pentru a evita erori de tip CORS la unele webhook-uri
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ choice: choice, time: new Date().toLocaleString() })
+    });
+  } catch (error) {
+    console.log("Webhook error:", error);
+  }
+}
 
-  yesBtn.addEventListener("click", () => {
-    // Trimite e-mailul automat
-    form.submit(); 
-    
-    document.getElementById("btns").style.display = "none";
-    document.getElementById("question").style.display = "none";
-    document.getElementById("msg").style.display = "block";
-  });
+const noBtn = document.getElementById("no");
+const yesBtn = document.getElementById("yesBtn");
+const message = document.getElementById("message");
+const question = document.getElementById("question");
+
+// Logica pentru butonul care fuge
+noBtn.addEventListener("mouseover", () => {
+  // Schimbăm în absolute doar când începe interacțiunea
+  noBtn.style.position = "absolute";
+  
+  const x = Math.random() * (window.innerWidth - noBtn.offsetWidth);
+  const y = Math.random() * (window.innerHeight - noBtn.offsetHeight);
+  
+  noBtn.style.left = x + "px";
+  noBtn.style.top = y + "px";
+});
+
+// Acțiune la YES
+yesBtn.addEventListener("click", () => {
+  sendClick("YES");
+  
+  // Ascundem butoanele și întrebarea
+  document.querySelector('.buttons').style.display = 'none';
+  question.style.display = 'none';
+  
+  // Arătăm mesajul de succes
+  message.style.display = "block";
+  
+  // Efect de confetti opțional (doar text)
+  document.body.style.backgroundColor = "#ffb3d9";
+});
+
+// Opțional: logăm și dacă reușește să dea click pe NO
+noBtn.addEventListener("click", () => {
+  sendClick("NO");
+  alert("Cum ai reușit?! 🤔");
+});
 </script>
+
 </body>
 </html>
