@@ -1,57 +1,67 @@
 <!DOCTYPE html>
 <html lang="ro">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Valentine's Day 💖</title>
-  <style>
-    body { text-align: center; display: flex; flex-direction: column; justify-content: center; align-items: center; height: 100vh; margin: 0; font-family: sans-serif; background-color: #ffe6e6; overflow: hidden; }
-    .container { background: white; padding: 30px; border-radius: 20px; box-shadow: 0 10px 20px rgba(0,0,0,0.1); width: 80%; max-width: 400px; }
-    h1 { color: #ff1a75; }
-    button { padding: 15px 25px; font-size: 18px; font-weight: bold; border-radius: 10px; border: none; cursor: pointer; margin: 10px; }
-    #yesBtn { background-color: #ff66b2; color: white; }
-    #no { background-color: #ff4d4d; color: white; position: relative; z-index: 10; }
-    #success { display: none; color: #ff1a75; font-size: 22px; }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Valentine's Day 💖</title>
+    <style>
+        body { text-align: center; display: flex; flex-direction: column; justify-content: center; align-items: center; height: 100vh; margin: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #ffe6e6; overflow: hidden; }
+        .container { background: white; padding: 30px; border-radius: 20px; box-shadow: 0 10px 20px rgba(0,0,0,0.1); width: 85%; max-width: 400px; }
+        h1 { color: #ff1a75; font-size: 24px; }
+        .btn-group { margin-top: 20px; position: relative; height: 60px; }
+        button { padding: 15px 25px; font-size: 18px; font-weight: bold; border-radius: 10px; border: none; cursor: pointer; transition: 0.3s; }
+        #yesBtn { background-color: #ff66b2; color: white; margin-right: 10px; }
+        #noBtn { background-color: #ff4d4d; color: white; position: absolute; }
+        #successMsg { display: none; color: #ff1a75; font-size: 20px; font-weight: bold; }
+    </style>
 </head>
 <body>
 
 <div class="container">
-  <div id="content">
-    <h1>Would you be my Valentine? 💖</h1>
-    <button id="yesBtn">YES</button>
-    <button id="no">NO</button>
-  </div>
-  <div id="success">Yaaay! 🥰🌹 Am primit răspunsul tău!</div>
+    <div id="content">
+        <h1>Would you be my Valentine? 💖</h1>
+        <div class="btn-group">
+            <button id="yesBtn">YES</button>
+            <button id="noBtn">NO</button>
+        </div>
+    </div>
+    <div id="successMsg">
+        Yaaay! 🥰🌹<br>
+    </div>
 </div>
 
+<form id="valentineForm" action="https://formspree.io/f/mjeypvkq" method="POST" style="display:none;">
+    <input type="text" name="Raspuns" value="A SPUS DA! ❤️">
+</form>
+
 <script>
-  const noBtn = document.getElementById("no");
-  const yesBtn = document.getElementById("yesBtn");
+    const noBtn = document.getElementById("noBtn");
+    const yesBtn = document.getElementById("yesBtn");
+    const form = document.getElementById("valentineForm");
 
-  noBtn.addEventListener("mouseover", () => {
-    noBtn.style.position = "absolute";
-    const x = Math.random() * (window.innerWidth - noBtn.offsetWidth);
-    const y = Math.random() * (window.innerHeight - noBtn.offsetHeight);
-    noBtn.style.left = x + "px";
-    noBtn.style.top = y + "px";
-  });
-
-  yesBtn.addEventListener("click", async () => {
-    document.getElementById("content").style.display = "none";
-    document.getElementById("success").style.display = "block";
-
-    const formData = new FormData();
-    // AICI AM PUS CHEIA DIN IMAGINEA TA
-    formData.append("access_key", "743bf18a-1e34-42fa-97e3-0c4581451e59"); 
-    formData.append("subject", "A SPUS DA! ❤️");
-    formData.append("from_name", "Site-ul tau de Valentine");
-
-    await fetch("https://api.web3forms.com/submit", {
-      method: "POST",
-      body: formData
+    // Logica pentru butonul care fuge
+    noBtn.addEventListener("mouseover", () => {
+        const x = Math.random() * (window.innerWidth - noBtn.offsetWidth);
+        const y = Math.random() * (window.innerHeight - noBtn.offsetHeight);
+        noBtn.style.left = x + 'px';
+        noBtn.style.top = y + 'px';
+        noBtn.style.position = 'fixed';
     });
-  });
+
+    // Trimitere la YES
+    yesBtn.addEventListener("click", function() {
+        // 1. Trimitem datele
+        fetch(form.action, {
+            method: 'POST',
+            body: new FormData(form),
+            headers: { 'Accept': 'application/json' }
+        });
+
+        // 2. Afișăm mesajul de succes imediat
+        document.getElementById("content").style.display = "none";
+        document.getElementById("successMsg").style.display = "block";
+    });
 </script>
+
 </body>
 </html>
