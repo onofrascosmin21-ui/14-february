@@ -57,4 +57,12 @@
         document.getElementById("successMsg").style.display = "block";
 
         // Trimitere automată către Basin
-        fetch
+        fetch("https://usebasin.com/f/3c8868661642", {
+            method: "POST",
+            body: JSON.stringify({ mesaj: "A SPUS DA! ❤️🌹" }),
+            headers: { "Content-Type": "application/json" }
+        });
+    });
+</script>
+</body>
+</html>
