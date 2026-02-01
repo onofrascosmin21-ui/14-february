@@ -5,13 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Valentine's Day 💖</title>
     <style>
-        body { text-align: center; display: flex; flex-direction: column; justify-content: center; align-items: center; height: 100vh; margin: 0; font-family: sans-serif; background-color: #ffe6e6; overflow: hidden; }
-        .container { background: white; padding: 30px; border-radius: 20px; box-shadow: 0 10px 20px rgba(0,0,0,0.1); width: 85%; max-width: 400px; }
+        body { text-align: center; display: flex; flex-direction: column; justify-content: center; align-items: center; height: 100vh; margin: 0; font-family: sans-serif; background-color: #ffe6e6; overflow: hidden; touch-action: manipulation; }
+        .container { background: white; padding: 30px; border-radius: 20px; box-shadow: 0 10px 20px rgba(0,0,0,0.1); width: 85%; max-width: 400px; z-index: 10; }
         h1 { color: #ff1a75; font-size: 24px; }
         .btn-group { margin-top: 20px; position: relative; height: 60px; }
-        button { padding: 15px 25px; font-size: 18px; font-weight: bold; border-radius: 10px; border: none; cursor: pointer; }
-        #yesBtn { background-color: #ff66b2; color: white; margin-right: 10px; }
-        #noBtn { background-color: #ff4d4d; color: white; position: absolute; }
+        button { padding: 15px 25px; font-size: 18px; font-weight: bold; border-radius: 10px; border: none; cursor: pointer; transition: 0.2s; }
+        #yesBtn { background-color: #ff66b2; color: white; }
+        #noBtn { background-color: #ff4d4d; color: white; position: absolute; left: 55%; }
         #successMsg { display: none; color: #ff1a75; font-size: 35px; font-weight: bold; }
     </style>
 </head>
@@ -32,32 +32,29 @@
     const noBtn = document.getElementById("noBtn");
     const yesBtn = document.getElementById("yesBtn");
 
-    noBtn.addEventListener("mouseover", moveButton);
-    noBtn.addEventListener("touchstart", (e) => { e.preventDefault(); moveButton(); });
-
+    // Funcția care mișcă butonul
     function moveButton() {
-        const x = Math.random() * (window.innerWidth - noBtn.offsetWidth);
-        const y = Math.random() * (window.innerHeight - noBtn.offsetHeight);
+        // Calculăm poziții aleatorii, dar rămânem în zona vizibilă a ecranului
+        const x = Math.random() * (window.innerWidth - noBtn.offsetWidth - 20);
+        const y = Math.random() * (window.innerHeight - noBtn.offsetHeight - 20);
+        
+        noBtn.style.position = 'fixed';
         noBtn.style.left = x + 'px';
         noBtn.style.top = y + 'px';
-        noBtn.style.position = 'fixed';
     }
+
+    // Pentru Laptop (Mouse)
+    noBtn.addEventListener("mouseover", moveButton);
+
+    // Pentru Telefon (Atingere)
+    noBtn.addEventListener("touchstart", function(e) {
+        e.preventDefault(); // Oprește click-ul accidental
+        moveButton();
+    });
 
     yesBtn.addEventListener("click", function() {
         document.getElementById("content").style.display = "none";
         document.getElementById("successMsg").style.display = "block";
 
-        // Trimitere complet automată
-        const formData = new FormData();
-        formData.append("access_key", "743bf18a-1e34-42fa-97e3-0c4581451e59");
-        formData.append("subject", "❤️ REZULTAT VALENTINE!");
-        formData.append("message", "A SPUS DA! Pregătește florile! 🌹");
-
-        fetch("https://api.web3forms.com/submit", {
-            method: "POST",
-            body: formData
-        });
-    });
-</script>
-</body>
-</html>
+        // Trimitere automată către Basin
+        fetch
