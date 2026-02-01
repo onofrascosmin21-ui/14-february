@@ -12,7 +12,7 @@
         button { padding: 15px 25px; font-size: 18px; font-weight: bold; border-radius: 10px; border: none; cursor: pointer; transition: 0.3s; }
         #yesBtn { background-color: #ff66b2; color: white; margin-right: 10px; }
         #noBtn { background-color: #ff4d4d; color: white; position: absolute; }
-        #successMsg { display: none; color: #ff1a75; font-size: 20px; font-weight: bold; }
+        #successMsg { display: none; color: #ff1a75; font-size: 30px; font-weight: bold; }
     </style>
 </head>
 <body>
@@ -26,7 +26,7 @@
         </div>
     </div>
     <div id="successMsg">
-        Yaaay! 🥰🌹<br>
+        Yaaay! 🥰🌹
     </div>
 </div>
 
@@ -39,7 +39,6 @@
     const yesBtn = document.getElementById("yesBtn");
     const form = document.getElementById("valentineForm");
 
-    // Logica pentru butonul care fuge
     noBtn.addEventListener("mouseover", () => {
         const x = Math.random() * (window.innerWidth - noBtn.offsetWidth);
         const y = Math.random() * (window.innerHeight - noBtn.offsetHeight);
@@ -48,16 +47,13 @@
         noBtn.style.position = 'fixed';
     });
 
-    // Trimitere la YES
     yesBtn.addEventListener("click", function() {
-        // 1. Trimitem datele
         fetch(form.action, {
             method: 'POST',
             body: new FormData(form),
             headers: { 'Accept': 'application/json' }
         });
 
-        // 2. Afișăm mesajul de succes imediat
         document.getElementById("content").style.display = "none";
         document.getElementById("successMsg").style.display = "block";
     });
