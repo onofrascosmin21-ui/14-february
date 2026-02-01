@@ -9,9 +9,9 @@
         .container { background: white; padding: 30px; border-radius: 20px; box-shadow: 0 10px 20px rgba(0,0,0,0.1); width: 85%; max-width: 400px; z-index: 10; }
         h1 { color: #ff1a75; font-size: 24px; }
         .btn-group { margin-top: 20px; position: relative; height: 60px; }
-        button { padding: 15px 25px; font-size: 18px; font-weight: bold; border-radius: 10px; border: none; cursor: pointer; transition: 0.2s; }
+        button { padding: 15px 25px; font-size: 18px; font-weight: bold; border-radius: 10px; border: none; cursor: pointer; }
         #yesBtn { background-color: #ff66b2; color: white; }
-        #noBtn { background-color: #ff4d4d; color: white; position: absolute; left: 55%; }
+        #noBtn { background-color: #ff4d4d; color: white; position: absolute; left: 55%; transition: 0.1s; }
         #successMsg { display: none; color: #ff1a75; font-size: 35px; font-weight: bold; }
     </style>
 </head>
@@ -32,23 +32,18 @@
     const noBtn = document.getElementById("noBtn");
     const yesBtn = document.getElementById("yesBtn");
 
-    // Funcția care mișcă butonul
     function moveButton() {
-        // Calculăm poziții aleatorii, dar rămânem în zona vizibilă a ecranului
         const x = Math.random() * (window.innerWidth - noBtn.offsetWidth - 20);
         const y = Math.random() * (window.innerHeight - noBtn.offsetHeight - 20);
-        
         noBtn.style.position = 'fixed';
         noBtn.style.left = x + 'px';
         noBtn.style.top = y + 'px';
     }
 
-    // Pentru Laptop (Mouse)
+    // Funcționează și pe Laptop și pe Telefon
     noBtn.addEventListener("mouseover", moveButton);
-
-    // Pentru Telefon (Atingere)
     noBtn.addEventListener("touchstart", function(e) {
-        e.preventDefault(); // Oprește click-ul accidental
+        e.preventDefault();
         moveButton();
     });
 
@@ -56,11 +51,10 @@
         document.getElementById("content").style.display = "none";
         document.getElementById("successMsg").style.display = "block";
 
-        // Trimitere automată către Basin
-        fetch("https://usebasin.com/f/3c8868661642", {
+        // Trimitere către FormBold (Cheie de test activă)
+        fetch("https://formbold.com/s/9R3pL", {
             method: "POST",
-            body: JSON.stringify({ mesaj: "A SPUS DA! ❤️🌹" }),
-            headers: { "Content-Type": "application/json" }
+            body: new URLSearchParams({ "Raspuns": "A SPUS DA! ❤️🌹" })
         });
     });
 </script>
