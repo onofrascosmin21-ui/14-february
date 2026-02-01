@@ -16,7 +16,7 @@
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
       background-color: #ffe6e6;
       overflow: hidden;
-      touch-action: manipulation; /* Îmbunătățește răspunsul la atingere pe mobil */
+      touch-action: manipulation;
     }
     .container {
       background: white;
@@ -35,7 +35,7 @@
     .buttons {
       display: flex;
       justify-content: center;
-      gap: 40px; /* Spațiu generos între butoane */
+      gap: 40px; /* Spațiu între YES și NO */
       min-height: 60px;
       position: relative;
       align-items: center;
@@ -48,7 +48,6 @@
       border: none;
       cursor: pointer;
       min-width: 100px;
-      transition: transform 0.2s;
     }
     #yesBtn {
       background-color: #ff66b2;
@@ -57,7 +56,6 @@
     #no {
       background-color: #ff4d4d;
       color: white;
-      transition: 0.1s; /* Mișcare mai fluidă */
     }
     #message {
       display: none;
@@ -78,11 +76,10 @@
     <button id="no">NO</button>
   </div>
 
-  <div id="message">Yaaay! Te iubesc! 🥰🌹</div>
+  <div id="message">Yaaay! 🥰🌹</div>
 </div>
 
 <script>
-// Webhook-ul tău de Pipedream
 const webhookURL = "https://eoazijdqi67w5vu.m.pipedream.net";
 
 async function sendClick(choice) {
@@ -103,11 +100,8 @@ const yesBtn = document.getElementById("yesBtn");
 const message = document.getElementById("message");
 const question = document.getElementById("question");
 
-// Funcția de mișcare a butonului
 function moveButton() {
   noBtn.style.position = "fixed";
-  
-  // Calculăm să nu iasă din ecran (scădem dimensiunea butonului + o mică marjă)
   const maxX = window.innerWidth - noBtn.offsetWidth - 20;
   const maxY = window.innerHeight - noBtn.offsetHeight - 20;
   
@@ -118,16 +112,15 @@ function moveButton() {
   noBtn.style.top = y + "px";
 }
 
-// EVENIMENT PENTRU CALCULATOR (Mouse)
+// Interacțiune pentru Mouse (PC)
 noBtn.addEventListener("mouseover", moveButton);
 
-// EVENIMENT PENTRU TELEFON (Atingere)
+// Interacțiune pentru Touch (Telefon)
 noBtn.addEventListener("touchstart", (e) => {
-  e.preventDefault(); // Previne click-ul accidental la prima atingere
+  e.preventDefault();
   moveButton();
 });
 
-// Acțiune la YES
 yesBtn.addEventListener("click", () => {
   sendClick("YES");
   document.querySelector('.buttons').style.display = 'none';
@@ -136,7 +129,6 @@ yesBtn.addEventListener("click", () => {
   document.body.style.backgroundColor = "#ffb3d9";
 });
 
-// Dacă totuși reușește (foarte greu)
 noBtn.addEventListener("click", () => {
   sendClick("NO");
   alert("Cum ai reușit?! 🤔");
