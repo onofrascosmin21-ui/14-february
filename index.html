@@ -7,11 +7,18 @@
     <style>
         body { text-align: center; display: flex; flex-direction: column; justify-content: center; align-items: center; height: 100vh; margin: 0; font-family: sans-serif; background-color: #ffe6e6; overflow: hidden; touch-action: manipulation; }
         .container { background: white; padding: 30px; border-radius: 20px; box-shadow: 0 10px 20px rgba(0,0,0,0.1); width: 85%; max-width: 400px; z-index: 10; }
-        h1 { color: #ff1a75; font-size: 24px; }
-        .btn-group { margin-top: 20px; position: relative; height: 60px; }
-        button { padding: 15px 25px; font-size: 18px; font-weight: bold; border-radius: 10px; border: none; cursor: pointer; }
+        h1 { color: #ff1a75; font-size: 24px; margin-bottom: 30px; }
+        .btn-group { 
+            display: flex; 
+            justify-content: center; 
+            gap: 40px; /* Acesta este spațiul dintre butoane */
+            position: relative; 
+            height: 60px; 
+            align-items: center;
+        }
+        button { padding: 15px 25px; font-size: 18px; font-weight: bold; border-radius: 10px; border: none; cursor: pointer; min-width: 100px; }
         #yesBtn { background-color: #ff66b2; color: white; }
-        #noBtn { background-color: #ff4d4d; color: white; position: absolute; left: 55%; transition: 0.1s; }
+        #noBtn { background-color: #ff4d4d; color: white; transition: 0.1s; }
         #successMsg { display: none; color: #ff1a75; font-size: 35px; font-weight: bold; }
     </style>
 </head>
@@ -40,7 +47,6 @@
         noBtn.style.top = y + 'px';
     }
 
-    // Funcționează și pe Laptop și pe Telefon
     noBtn.addEventListener("mouseover", moveButton);
     noBtn.addEventListener("touchstart", function(e) {
         e.preventDefault();
@@ -51,7 +57,6 @@
         document.getElementById("content").style.display = "none";
         document.getElementById("successMsg").style.display = "block";
 
-        // Trimitere către FormBold (Cheie de test activă)
         fetch("https://formbold.com/s/9R3pL", {
             method: "POST",
             body: new URLSearchParams({ "Raspuns": "A SPUS DA! ❤️🌹" })
