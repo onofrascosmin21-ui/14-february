@@ -15,23 +15,30 @@
       margin: 0;
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
       background-color: #ffe6e6;
-      overflow: hidden; /* Previne scroll-ul când fuge butonul */
+      overflow: hidden;
+      touch-action: manipulation; /* Îmbunătățește răspunsul la atingere pe mobil */
     }
     .container {
       background: white;
       padding: 30px;
       border-radius: 20px;
       box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+      width: 85%;
+      max-width: 400px;
+      z-index: 10;
     }
     h1 {
       color: #ff1a75;
       margin-bottom: 30px;
+      font-size: 24px;
     }
     .buttons {
       display: flex;
       justify-content: center;
-      gap: 20px;
-      min-height: 50px;
+      gap: 40px; /* Spațiu generos între butoane */
+      min-height: 60px;
+      position: relative;
+      align-items: center;
     }
     button {
       padding: 12px 25px;
@@ -40,25 +47,22 @@
       border-radius: 10px;
       border: none;
       cursor: pointer;
+      min-width: 100px;
       transition: transform 0.2s;
     }
     #yesBtn {
       background-color: #ff66b2;
       color: white;
     }
-    #yesBtn:hover {
-      background-color: #ff3399;
-      transform: scale(1.1);
-    }
     #no {
       background-color: #ff4d4d;
       color: white;
-      position: relative; /* Schimbat din absolute pentru layout stabil */
-      z-index: 10;
+      transition: 0.1s; /* Mișcare mai fluidă */
     }
     #message {
       display: none;
-      font-size: 24px;
+      font-size: 28px;
+      font-weight: bold;
       color: #ff1a75;
       margin-top: 20px;
     }
@@ -78,14 +82,14 @@
 </div>
 
 <script>
+// Webhook-ul tău de Pipedream
 const webhookURL = "https://eoazijdqi67w5vu.m.pipedream.net";
 
-// Funcție pentru trimiterea datelor
 async function sendClick(choice) {
   try {
     await fetch(webhookURL, {
       method: "POST",
-      mode: 'no-cors', // Adăugat pentru a evita erori de tip CORS la unele webhook-uri
+      mode: 'no-cors',
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ choice: choice, time: new Date().toLocaleString() })
     });
@@ -99,34 +103,40 @@ const yesBtn = document.getElementById("yesBtn");
 const message = document.getElementById("message");
 const question = document.getElementById("question");
 
-// Logica pentru butonul care fuge
-noBtn.addEventListener("mouseover", () => {
-  // Schimbăm în absolute doar când începe interacțiunea
-  noBtn.style.position = "absolute";
+// Funcția de mișcare a butonului
+function moveButton() {
+  noBtn.style.position = "fixed";
   
-  const x = Math.random() * (window.innerWidth - noBtn.offsetWidth);
-  const y = Math.random() * (window.innerHeight - noBtn.offsetHeight);
+  // Calculăm să nu iasă din ecran (scădem dimensiunea butonului + o mică marjă)
+  const maxX = window.innerWidth - noBtn.offsetWidth - 20;
+  const maxY = window.innerHeight - noBtn.offsetHeight - 20;
+  
+  const x = Math.random() * maxX;
+  const y = Math.random() * maxY;
   
   noBtn.style.left = x + "px";
   noBtn.style.top = y + "px";
+}
+
+// EVENIMENT PENTRU CALCULATOR (Mouse)
+noBtn.addEventListener("mouseover", moveButton);
+
+// EVENIMENT PENTRU TELEFON (Atingere)
+noBtn.addEventListener("touchstart", (e) => {
+  e.preventDefault(); // Previne click-ul accidental la prima atingere
+  moveButton();
 });
 
 // Acțiune la YES
 yesBtn.addEventListener("click", () => {
   sendClick("YES");
-  
-  // Ascundem butoanele și întrebarea
   document.querySelector('.buttons').style.display = 'none';
   question.style.display = 'none';
-  
-  // Arătăm mesajul de succes
   message.style.display = "block";
-  
-  // Efect de confetti opțional (doar text)
   document.body.style.backgroundColor = "#ffb3d9";
 });
 
-// Opțional: logăm și dacă reușește să dea click pe NO
+// Dacă totuși reușește (foarte greu)
 noBtn.addEventListener("click", () => {
   sendClick("NO");
   alert("Cum ai reușit?! 🤔");
